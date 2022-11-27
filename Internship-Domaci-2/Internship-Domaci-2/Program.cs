@@ -2,7 +2,7 @@
 using Internship_Domaci_2.Classes;
 
 // Predefinirani eventi i osobe;
-List<Event> events = new List<Event>()
+var events = new List<Event>()
 {
     new Event("Event1", "Location1", "25-11-2022", "31-12-2022", "tomiclovre05@gmail.com drugimail@gmail.com"),
     new Event("Event2", "Location2", "15-07-2005", "03-05-2020", "tomiclovre05@gmail.com drugimail@gmail.com"),
@@ -12,7 +12,7 @@ List<Event> events = new List<Event>()
     new Event("Event6", "Location6", "13-01-2023 13:54:09", "18-01-2023 21:12:47", "tomiclovre05@gmail.com drugimail@gmail.com")
 };
 
-List<Person> people = new List<Person>()
+var people = new List<Person>()
 {
     new Person("Ime1", "Prezime1", "Email1"),
     new Person("Ime2", "Prezime2", "Email2"),
@@ -102,7 +102,7 @@ void printPastEvents()
             counter++;
             Console.WriteLine(eventData.Id);                                                // zaokruži na jednu decimalu VVV
             Console.WriteLine($"{eventData.Title} - {eventData.Location} - Ended before {(today - eventData.EndDate).TotalDays} days - Duration: {(eventData.EndDate - eventData.BeginDate).TotalHours} hours");
-            eventData.PrintAttendees();
+            eventData.PrintAttendees(people);
             eventData.PrintAttendance(eventData.Id, people);
             Console.WriteLine("--------------------");
         }
@@ -128,14 +128,14 @@ void printActiveEvents()
         if(eventData.BeginDate < today && eventData.EndDate > today)
         {
             counter++;
-
+            /*
             foreach(var person in people)
                 if(eventData.Emails.Contains(person.Email))
                     person.Attendance[eventData.Id.ToString()] = true;  // Pretpostavka da su svi prisutni
-
+            */
             Console.WriteLine(eventData.Id);
             Console.WriteLine($"{eventData.Title} - {eventData.Location} - Ends in {eventData.EndDate - today}");
-            eventData.PrintAttendees();
+            eventData.PrintAttendees(people);
             Console.WriteLine("--------------------");
         }
     }
@@ -179,9 +179,20 @@ void printActiveEvents()
             // TU SI STAO --> TREBAŠ ZA SVE UNESENE MAILOVE KOJI ODGOVARAJU EVENTU POSTAVITI ATTENDANCE NA FALSE
             Console.WriteLine("Unesi emailove osoba koje nisu prisutne odvojene razmakom.");
             var inputEmails = Console.ReadLine().Split(" ").ToList();
-            foreach(var person in people)
-                if(person.Attendance.ContainsKey(inputId))
-                    person.Attendance[inputId] = false;
+            for(var i = 0; i < people.Count(); i++)
+            {
+                foreach(var presence in people[i].Attendance)
+                {
+                    if (inputEmails.Contains(people[i].Email))
+                    {
+                        people[i].Attendance[inputId] = false;
+                    }
+                    else
+                    {
+                        // Treba dodati poruku
+                    }
+                }
+            }
             returnToMain(1);
             break;
         case 0:
@@ -210,7 +221,7 @@ void printFutureEvents()
                 Console.WriteLine($"{eventData.Title} - {eventData.Location} - Starts in {eventData.BeginDate.Day - today.Day} day - Length in hours: {eventLengthInHours}");
             else
                 Console.WriteLine($"{eventData.Title} - {eventData.Location} - Starts in {eventData.BeginDate.Day - today.Day} days - Length in hours: {eventLengthInHours}");
-            eventData.PrintAttendees();
+            eventData.PrintAllAttendees();
             Console.WriteLine("--------------------");
         }
     }

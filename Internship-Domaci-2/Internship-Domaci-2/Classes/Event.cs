@@ -25,16 +25,36 @@ namespace Internship_Domaci_2.Classes
             Emails = new List<string>(emails.Split(" "));
         }
 
-        public void PrintAttendees()
+        public void PrintAttendees(List<Person> people)
         {
             var counter = 0;
             var output = "";
-            foreach (var Email in Emails)
+
+            foreach (var person in people)
+            {
+                if (person.Attendance[Id.ToString()] is true)
+                {
+                    if (counter != 0) output += ", ";
+                    output += person.Email;
+                    counter++;
+                }
+            }
+            if (counter == 0) output = "Nema upisanih osoba.";
+            Console.WriteLine(output);   
+        }
+
+        public void PrintAllAttendees()
+        {
+            var counter = 0;
+            var output = "";
+
+            foreach (var email in Emails)
             {
                 if (counter != 0) output += ", ";
-                output += Email;
+                output += email;
                 counter++;
             }
+            if (counter == 0) output = "Nema upisanih osoba.";
             Console.WriteLine(output);
         }
 
