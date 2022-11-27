@@ -35,7 +35,18 @@ foreach (var person in people)
         else
             person.Attendance.Add(singleEvent.Id.ToString(), false);
 
-int getInput() { return int.Parse(Console.ReadLine()); }
+int getInput()
+{
+    var input = Console.ReadLine();
+    if (int.TryParse(input, out var a) is true)
+        return int.Parse(input);
+    else
+    {
+        Console.WriteLine("## Pogrešan unos! Unesi novu vrijednost.");
+        getInput();
+    }
+    return 0;
+}
 void Main()
 {
     Console.Clear();
