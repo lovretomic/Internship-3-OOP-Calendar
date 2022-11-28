@@ -37,14 +37,18 @@ foreach (var person in people)
 
 int getInput()
 {
-    var input = Console.ReadLine();
-    if (int.TryParse(input, out var a) is true)
-        return int.Parse(input);
-    else
+    string input;
+    int a;
+
+    do
     {
-        Console.WriteLine("## Pogrešan unos! Unesi novu vrijednost.");
-        getInput();
-    }
+        input = Console.ReadLine();
+        if (int.TryParse(input, out a) is true)
+            return int.Parse(input);
+        else
+            Console.WriteLine("## Pogrešan unos! Unesi novu vrijednost.");
+    } while (int.TryParse(input, out a) is false);
+
     return 0;
 }
 void Main()
@@ -100,10 +104,10 @@ void printPastEvents()
         if (eventData.EndDate < today)
         {
             counter++;
-            Console.WriteLine(eventData.Id);                                                // zaokruži na jednu decimalu VVV
-            Console.WriteLine($"{eventData.Title} - {eventData.Location} - Ended before {(today - eventData.EndDate).TotalDays} days - Duration: {(eventData.EndDate - eventData.BeginDate).TotalHours} hours");
+            Console.WriteLine(eventData.Id);
+            Console.WriteLine($"{eventData.Title} - {eventData.Location} - Ended before {Math.Round((today - eventData.EndDate).TotalDays, 1)} days - Duration: {(eventData.EndDate - eventData.BeginDate).TotalHours} hours");
             eventData.PrintAttendees(people);
-            eventData.PrintAttendance(eventData.Id, people);
+            eventData.PrintAttendance(people);
             Console.WriteLine("--------------------");
         }
     }
@@ -128,11 +132,6 @@ void printActiveEvents()
         if(eventData.BeginDate < today && eventData.EndDate > today)
         {
             counter++;
-            /*
-            foreach(var person in people)
-                if(eventData.Emails.Contains(person.Email))
-                    person.Attendance[eventData.Id.ToString()] = true;  // Pretpostavka da su svi prisutni
-            */
             Console.WriteLine(eventData.Id);
             Console.WriteLine($"{eventData.Title} - {eventData.Location} - Ends in {eventData.EndDate - today}");
             eventData.PrintAttendees(people);
@@ -176,7 +175,6 @@ void printActiveEvents()
                 }
             } while (condition is true);
 
-            // TU SI STAO --> TREBAŠ ZA SVE UNESENE MAILOVE KOJI ODGOVARAJU EVENTU POSTAVITI ATTENDANCE NA FALSE
             Console.WriteLine("Unesi emailove osoba koje nisu prisutne odvojene razmakom.");
             var inputEmails = Console.ReadLine().Split(" ").ToList();
             for(var i = 0; i < people.Count(); i++)
@@ -200,7 +198,6 @@ void printActiveEvents()
             break;
     }
 }
-
 void printFutureEvents()
 {
     Console.Clear();
@@ -211,16 +208,16 @@ void printFutureEvents()
     var counter = 0;
     foreach (var eventData in events)
     {
-        if (eventData.BeginDate > today) // Sigurni smo da je datum kraja iza datuma početka
+        if (eventData.BeginDate > today)
         {
             counter++;
             Console.WriteLine(eventData.Id);
             var eventLength = eventData.EndDate - eventData.BeginDate;
             var eventLengthInHours = Math.Round(eventLength.TotalHours, 1);
-            if(eventData.BeginDate.Day - today.Day == 1)
-                Console.WriteLine($"{eventData.Title} - {eventData.Location} - Starts in {eventData.BeginDate.Day - today.Day} day - Length in hours: {eventLengthInHours}");
+            if(Math.Round((eventData.BeginDate - today).TotalDays, 1) == 1)
+                Console.WriteLine($"{eventData.Title} - {eventData.Location} - Starts in {Math.Round((eventData.BeginDate - today).TotalDays, 1)} day - Length in hours: {eventLengthInHours}");
             else
-                Console.WriteLine($"{eventData.Title} - {eventData.Location} - Starts in {eventData.BeginDate.Day - today.Day} days - Length in hours: {eventLengthInHours}");
+                Console.WriteLine($"{eventData.Title} - {eventData.Location} - Starts in {Math.Round((eventData.BeginDate - today).TotalDays, 1)} days - Length in hours: {eventLengthInHours}");
             eventData.PrintAllAttendees();
             Console.WriteLine("--------------------");
         }
@@ -241,8 +238,9 @@ void printFutureEvents()
         case 1:
             Console.Clear();
             Console.WriteLine("--- BRISANJE NADOLAZECEG EVENTA ---\n");
-            foreach (var Event in events)
-                Console.WriteLine($"{Event.Title} - {Event.Id}");
+            foreach (var singleEvent in events)
+                if(singleEvent.BeginDate > today)
+                    Console.WriteLine($"{singleEvent.Title} - {singleEvent.Id}");
             var condition = true;
             do
             {
@@ -268,6 +266,61 @@ void printFutureEvents()
 
             } while (condition is true);
             
+            returnToMain(1);
+            break;
+        case 2:
+            condition = true;
+            do
+            {
+                var inputId = "";
+                void inputIdFunction()
+                {
+                    Console.WriteLine("\nUnesi id eventa kojeg želiš urediti ili 0 za povratak na glavni izbornik.");
+                    inputId = Console.ReadLine();
+                    if (String.Equals(inputId, "0")) returnToMain(0);
+
+                    foreach (var singleEvent in events)
+                        if (String.Compare(singleEvent.Id.ToString(), inputId) is 0) { condition = false; break; }
+
+                    if (condition is true)
+                    {
+                        Console.WriteLine("Event nije pronađen. Želiš li upisati novi id? (D/N)");
+                        var inputStr = Console.ReadLine().ToUpper();
+                        if (String.Equals(inputStr, "N")) returnToMain(1);
+                        else inputIdFunction();
+                    }
+                }
+
+                inputIdFunction();
+
+                Console.WriteLine("\nUnesi emailove osoba koje želiš izbrisati odvojene jednim razmakom.");
+                var inputEmails = Console.ReadLine().Split(" ").ToList();
+                var incorrectEmails = new List<string>();
+                foreach (var singleEvent in events)
+                    if (String.Compare(singleEvent.Id.ToString(), inputId) is 0)
+                    {
+                        //condition = false;
+                        foreach (var email in inputEmails)
+                            if (singleEvent.Emails.Contains(email)) singleEvent.Emails.Remove(email);
+                            else incorrectEmails.Add(email);
+                        break;
+                    }
+                if(incorrectEmails.Count() is not 0)
+                {
+                    counter = 0;
+                    var output = "Nisu pronađeni sljedeći emailovi: ";
+                    foreach (var incorrectEmail in incorrectEmails)
+                    {
+                            if (counter != 0) output += ", ";
+                            output += incorrectEmail;
+                            counter++;
+                    }
+                    Console.WriteLine(output);
+                }
+                // ----> TU SI STAO: provjeri kako radi nadolazeci > ukloni osobe (ne radi)
+                // ----> zadnje promjene nisi pushao!!
+
+            } while (condition is true);
             returnToMain(1);
             break;
         case 0:

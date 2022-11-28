@@ -58,23 +58,24 @@ namespace Internship_Domaci_2.Classes
             Console.WriteLine(output);
         }
 
-        public void PrintAttendance(Guid eventId, List<Person> people)
+        public void PrintAttendance(List<Person> people)
         {
             var counterTrue = 0;
             var counterFalse = 0;
             var attendanceTrue = "Prisutni: ";
             var attendanceFalse = "Odsutni: ";
             foreach (var person in people)
-                if (person.Attendance[eventId.ToString()] is true)
-                {
-                    attendanceTrue += $"\n* {person.Name} {person.Surname} ({person.Email}) ";
-                    counterTrue++;
-                }
-                else
-                {
-                    attendanceFalse += $"\n* {person.Name} {person.Surname} ({person.Email}) ";
-                    counterFalse++;
-                }
+                if(Emails.Contains(person.Email))
+                    if (person.Attendance[Id.ToString()] is true)
+                    {
+                        attendanceTrue += $"\n* {person.Name} {person.Surname} ({person.Email}) ";
+                        counterTrue++;
+                    }
+                    else
+                    {
+                        attendanceFalse += $"\n* {person.Name} {person.Surname} ({person.Email}) ";
+                        counterFalse++;
+                    }
             if (counterTrue == 0) attendanceTrue += "nije bilo prisutnih";
             if (counterFalse == 0) attendanceFalse += "nije bilo odsutnih";
             Console.WriteLine(attendanceTrue);
