@@ -133,7 +133,10 @@ void printActiveEvents()
         {
             counter++;
             Console.WriteLine(eventData.Id);
-            Console.WriteLine($"{eventData.Title} - {eventData.Location} - Ends in {eventData.EndDate - today}");
+            if(Math.Round((eventData.EndDate - today).TotalDays, 1) is 1)
+                Console.WriteLine($"{eventData.Title} - {eventData.Location} - Ends in {Math.Round((eventData.EndDate - today).TotalDays, 1)} day");
+            else
+                Console.WriteLine($"{eventData.Title} - {eventData.Location} - Ends in {Math.Round((eventData.EndDate - today).TotalDays, 1)} days");
             eventData.PrintAttendees(people);
             Console.WriteLine("--------------------");
         }
@@ -260,7 +263,7 @@ void printFutureEvents()
             var condition = true;
             do
             {
-                Console.WriteLine("\nUnesi id eventa kojeg želiš izbrisati ili 0 ako zelis povratak na glavni izbornik."); //## Provjeri (vi/ti) u ostatku koda
+                Console.WriteLine("\nUnesi id eventa kojeg želiš izbrisati ili 0 ako zelis povratak na glavni izbornik.");
                 var inputId = Console.ReadLine();
                 if (String.Equals(inputId, "0")) returnToMain(0);
                 foreach (var Event in events)
@@ -274,6 +277,9 @@ void printFutureEvents()
                         {
                             events.Remove(Event);
                             Console.WriteLine("Event je izbrisan.");
+                            foreach(var person in people)
+                                person.Attendance[inputId] = false;
+
                         }
                         else returnToMain(1);
                         break;
@@ -321,9 +327,14 @@ void printFutureEvents()
                 foreach (var singleEvent in events)
                     if (String.Compare(singleEvent.Id.ToString(), inputId) is 0)
                     {
-                        //condition = false;
                         foreach (var email in inputEmails)
-                            if (singleEvent.Emails.Contains(email)) singleEvent.Emails.Remove(email);
+                            if (singleEvent.Emails.Contains(email))
+                            {
+                                singleEvent.Emails.Remove(email);
+                                foreach(var person in people)
+                                    if(String.Equals(person.Email, email))
+                                        person.Attendance[inputId] = false;
+                            }
                             else incorrectEmails.Add(email);
                         break;
                     }
@@ -341,6 +352,7 @@ void printFutureEvents()
                 }
 
             } while (condition is true);
+            Console.WriteLine("\nSvi su potvrdeni mailovi izbrisani.");
             returnToMain(1);
             break;
         case 0:
@@ -368,8 +380,8 @@ void createEvent()
     Console.WriteLine($"NAZIV EVENTA: {newEventTitle}");
     Console.WriteLine($"LOKACIJA EVENTA: {newEventLocation}");
 
-    DateTime dateResult;    // Za korištenje DateTime.TryParse()
-    bool condition;         // Varijabla koja prati uspješnost pojedinog unosa
+    DateTime dateResult;
+    bool condition;
     do
     {
         condition = true;
