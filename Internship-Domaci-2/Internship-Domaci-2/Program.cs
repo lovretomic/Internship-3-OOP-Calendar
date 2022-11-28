@@ -177,7 +177,26 @@ void printActiveEvents()
 
             Console.WriteLine("Unesi emailove osoba koje nisu prisutne odvojene razmakom.");
             var inputEmails = Console.ReadLine().Split(" ").ToList();
-            for(var i = 0; i < people.Count(); i++)
+            var incorrectEmails = new List<string>();
+            foreach (var singleEvent in events)
+                if(String.Compare(singleEvent.Id.ToString(), inputId) is 0)
+                    foreach(var email in inputEmails)
+                        if (!singleEvent.Emails.Contains(email)) incorrectEmails.Add(email);
+
+            if (incorrectEmails.Count() is not 0)
+            {
+                counter = 0;
+                var output = "Nisu pronađeni sljedeći emailovi: ";
+                foreach (var incorrectEmail in incorrectEmails)
+                {
+                    if (counter != 0) output += ", ";
+                    output += incorrectEmail;
+                    counter++;
+                }
+                Console.WriteLine(output);
+            }
+
+            for (var i = 0; i < people.Count(); i++)
             {
                 foreach(var presence in people[i].Attendance)
                 {
@@ -185,12 +204,9 @@ void printActiveEvents()
                     {
                         people[i].Attendance[inputId] = false;
                     }
-                    else
-                    {
-                        // Treba dodati poruku
-                    }
                 }
             }
+            Console.WriteLine("\nSvi potvrđeni emailovi su izbrisani.");
             returnToMain(1);
             break;
         case 0:
@@ -317,8 +333,6 @@ void printFutureEvents()
                     }
                     Console.WriteLine(output);
                 }
-                // ----> TU SI STAO: provjeri kako radi nadolazeci > ukloni osobe (ne radi)
-                // ----> zadnje promjene nisi pushao!!
 
             } while (condition is true);
             returnToMain(1);
