@@ -267,9 +267,15 @@ void printFutureEvents()
                 {
                     if (String.Equals(Event.Id.ToString(), inputId))
                     {
-                        events.Remove(Event);       //## Dodaj potvrdu
-                        Console.WriteLine("Event je izbrisan.");
                         condition = false;
+                        Console.WriteLine("Jesi li siguran da zelis izbrisati taj event? (D/N)");
+                        var input = Console.ReadLine().ToUpper();
+                        if (String.Equals(input, "D"))
+                        {
+                            events.Remove(Event);
+                            Console.WriteLine("Event je izbrisan.");
+                        }
+                        else returnToMain(1);
                         break;
                     }
                 }
