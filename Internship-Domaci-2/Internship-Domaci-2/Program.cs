@@ -430,7 +430,18 @@ void createEvent()
     Console.WriteLine("Unesi e-mailove pozvanih osoba. (odvoji jednim razmakom)");
     newEventEmails = Console.ReadLine();
 
-    events.Add(new Event(newEventTitle, newEventLocation, newEventBeginDate, newEventEndDate, newEventEmails));
+    var newEventEmailsList = new List<string>(newEventEmails.Split(" ").ToList());
+    foreach (var person in people)
+        foreach (var attendingEventId in person.Attendance.Keys)
+            foreach (var singleEvent in events)
+                if (String.Equals(singleEvent.Id.ToString(), attendingEventId) && newEventEmails.Contains(person.Email))
+                    if (!(singleEvent.EndDate < DateTime.Parse(newEventBeginDate) || singleEvent.BeginDate > DateTime.Parse(newEventEndDate)))
+                    {
+                        newEventEmailsList.Remove(person.Email);
+                        Console.WriteLine($"Osoba ({person.Name}, {person.Email}) vec sudjeluje u drugom eventu.");
+                    }
+
+    events.Add(new Event(newEventTitle, newEventLocation, newEventBeginDate, newEventEndDate, String.Join(" ", newEventEmailsList.ToArray())));
 
     Console.WriteLine("\nEvent je dodan!");
     returnToMain(1);
