@@ -1,31 +1,30 @@
 ﻿
 using Internship_Domaci_2.Classes;
 
-// Predefinirani eventi i osobe;
 var events = new List<Event>()
 {
-    new Event("Event1", "Location1", "25-11-2022", "31-12-2022", "tomiclovre05@gmail.com drugimail@gmail.com"),
-    new Event("Event2", "Location2", "15-07-2005", "03-05-2020", "tomiclovre05@gmail.com drugimail@gmail.com"),
-    new Event("Event3", "Location3", "15-07-2005", "15-07-2006", "tomiclovre05@gmail.com drugimail@gmail.com"),
-    new Event("Event4", "Location4", "15-07-2005", "15-07-2006", "tomiclovre05@gmail.com drugimail@gmail.com"),
-    new Event("Event5", "Location5", "30-12-2022 13:54:09", "31-12-2022 21:12:47", "tomiclovre05@gmail.com drugimail@gmail.com"),
-    new Event("Event6", "Location6", "13-01-2023 13:54:09", "18-01-2023 21:12:47", "tomiclovre05@gmail.com drugimail@gmail.com")
+    new Event("Predavanje 001", "Dvorana 3", "25-11-2022", "31-12-2022", "novak.antun.34@gmail.com marin3674@gmail.com"),
+    new Event("Konferencija", "Dvorana 8", "02-02-2023", "05-02-2023", "filipfilip@gmail.com ivan.ivic@gmail.com"),
+    new Event("Sastanak za projekt", "Soba A31", "09-03-2023", "11-03-2023", "baciclana@gmail.com janita@gmail.com"),
+    new Event("Teambuilding 3", "Soba B85", "01-05-2023", "03-05-2023", "tl.846@gmail.com nina_culic@gmail.com"),
+    new Event("Teambuilding 2", "Soba A26", "06-09-2022", "09-09-2022", "martinaag97@gmail.com marko.delic@gmail.com"),
+    new Event("Uvod u novi program", "Dvorana 2", "27-11-2022", "15-12-2022", "bivana00@gmail.com nina_culic@gmail.com")
 };
 
 var people = new List<Person>()
 {
-    new Person("Ime1", "Prezime1", "Email1"),
-    new Person("Ime2", "Prezime2", "Email2"),
-    new Person("Ime3", "Prezime3", "Email3"),
-    new Person("Ime4", "Prezime4", "Email4"),
-    new Person("Ime5", "Prezime5", "Email5"),
-    new Person("Ime6", "Prezime6", "Email6"),
-    new Person("Ime7", "Prezime7", "Email7"),
-    new Person("Ime8", "Prezime8", "Email8"),
-    new Person("Ime9", "Prezime9", "Email9"),
-    new Person("Ime10", "Prezime10", "Email10"),
-    new Person("Lovre", "Tomić", "tomiclovre05@gmail.com"),
-    new Person("Druga", "Osoba", "drugimail@gmail.com")
+    new Person("Ivan", "Ivic", "ivan.ivic@gmail.com"),
+    new Person("Ana", "Horvat", "horvatana02@gmail.com"),
+    new Person("Nina", "Culic", "nina_culic@gmail.com"),
+    new Person("Marin", "Ivandic", "marin3674@gmail.com"),
+    new Person("Ivana", "Babic", "bivana00@gmail.com"),
+    new Person("Antun", "Novak", "novak.antun.34@gmail.com"),
+    new Person("Filip", "Filipovic", "filipfilip@gmail.com"),
+    new Person("Martina", "Galic", "martinaag97@gmail.com"),
+    new Person("Luka", "Tadic", "tl.846@gmail.com"),
+    new Person("Anita", "Jozic", "janita@gmail.com"),
+    new Person("Marko", "Delic", "marko.delic@gmail.com"),
+    new Person("Lana", "Bacic", "baciclana@gmail.com")
 };
 
 foreach (var person in people)
@@ -46,7 +45,7 @@ int getInput()
         if (int.TryParse(input, out a) is true)
             return int.Parse(input);
         else
-            Console.WriteLine("## Pogrešan unos! Unesi novu vrijednost.");
+            Console.WriteLine("## Pogresan unos! Unesi novu vrijednost.");
     } while (int.TryParse(input, out a) is false);
 
     return 0;
@@ -56,10 +55,10 @@ void Main()
     Console.Clear();
     Console.WriteLine("--- MAIL KALENDAR ---");
     Console.WriteLine("1 - Aktivni eventi");
-    Console.WriteLine("2 - Nadolazeći eventi");
-    Console.WriteLine("3 - Eventi koji su završili");
+    Console.WriteLine("2 - Nadolazeci eventi");
+    Console.WriteLine("3 - Eventi koji su zavrsili");
     Console.WriteLine("4 - Kreireaj Event");
-    Console.WriteLine("0 - Izađi iz programa");
+    Console.WriteLine("0 - Izadi iz programa");
 
     switch(getInput())
     {
@@ -94,7 +93,7 @@ void returnToMain(int modifier) // modifier == 0 (bez provjere) / modifier != 0 
 void printPastEvents()
 {
     Console.Clear();
-    Console.WriteLine("--- ZAVRŠENI EVENTI ---\n");
+    Console.WriteLine("--- ZAVRSENI EVENTI ---\n");
     var today = DateTime.Today;
     Console.WriteLine("--------------------");
 
@@ -114,7 +113,7 @@ void printPastEvents()
 
     if (counter == 0)
     {
-        Console.WriteLine("Nema završenih evenata.\n--------------------");
+        Console.WriteLine("Nema zavrsenih evenata.\n--------------------");
         returnToMain(1);
     }
 
@@ -149,7 +148,7 @@ void printActiveEvents()
     }
 
     Console.WriteLine("\nFunkcije");
-    Console.WriteLine("1 - Zabilježi nepristunosti");
+    Console.WriteLine("1 - Zabiljezi nepristunosti");
     Console.WriteLine("0 - Povratak na glavni izbornik");
     switch(getInput())
     {
@@ -172,7 +171,7 @@ void printActiveEvents()
                 }
                 if (condition is true)
                 {
-                    Console.WriteLine("Event nije pronađen. Želiš li upisati novi id? (D/N)");
+                    Console.WriteLine("Event nije pronaden. Zelis li upisati novi id? (D/N)");
                     var inputStr = Console.ReadLine().ToUpper();
                     if (String.Equals(inputStr, "N")) returnToMain(1);
                 }
@@ -189,7 +188,7 @@ void printActiveEvents()
             if (incorrectEmails.Count() is not 0)
             {
                 counter = 0;
-                var output = "Nisu pronađeni sljedeći emailovi: ";
+                var output = "Nisu pronadeni sljedeci emailovi: ";
                 foreach (var incorrectEmail in incorrectEmails)
                 {
                     if (counter != 0) output += ", ";
@@ -209,7 +208,7 @@ void printActiveEvents()
                     }
                 }
             }
-            Console.WriteLine("\nSvi potvrđeni emailovi su izbrisani.");
+            Console.WriteLine("\nSvi potvrdeni emailovi su izbrisani.");
             returnToMain(1);
             break;
         case 0:
@@ -220,7 +219,7 @@ void printActiveEvents()
 void printFutureEvents()
 {
     Console.Clear();
-    Console.WriteLine("--- NADOLAZEĆI EVENTI ---\n");
+    Console.WriteLine("--- NADOLAZECI EVENTI ---\n");
     var today = DateTime.Today;
     Console.WriteLine("--------------------");
 
@@ -263,7 +262,7 @@ void printFutureEvents()
             var condition = true;
             do
             {
-                Console.WriteLine("\nUnesi id eventa kojeg želiš izbrisati ili 0 ako zelis povratak na glavni izbornik.");
+                Console.WriteLine("\nUnesi id eventa kojeg zelis izbrisati ili 0 ako zelis povratak na glavni izbornik.");
                 var inputId = Console.ReadLine();
                 if (String.Equals(inputId, "0")) returnToMain(0);
                 foreach (var Event in events)
@@ -287,7 +286,7 @@ void printFutureEvents()
                 }
                 if(condition is true)
                 {
-                    Console.WriteLine("Event nije pronađen. Želiš li upisati novi id? (D/N)");
+                    Console.WriteLine("Event nije pronaden. Zelis li upisati novi id? (D/N)");
                     var inputStr = Console.ReadLine().ToUpper();
                     if(String.Equals(inputStr, "N")) condition = false;
                 }
@@ -303,7 +302,7 @@ void printFutureEvents()
                 var inputId = "";
                 void inputIdFunction()
                 {
-                    Console.WriteLine("\nUnesi id eventa kojeg želiš urediti ili 0 za povratak na glavni izbornik.");
+                    Console.WriteLine("\nUnesi id eventa kojeg zelis urediti ili 0 za povratak na glavni izbornik.");
                     inputId = Console.ReadLine();
                     if (String.Equals(inputId, "0")) returnToMain(0);
 
@@ -312,7 +311,7 @@ void printFutureEvents()
 
                     if (condition is true)
                     {
-                        Console.WriteLine("Event nije pronađen. Želiš li upisati novi id? (D/N)");
+                        Console.WriteLine("Event nije pronaden. Zelis li upisati novi id? (D/N)");
                         var inputStr = Console.ReadLine().ToUpper();
                         if (String.Equals(inputStr, "N")) returnToMain(1);
                         else inputIdFunction();
@@ -321,7 +320,7 @@ void printFutureEvents()
 
                 inputIdFunction();
 
-                Console.WriteLine("\nUnesi emailove osoba koje želiš izbrisati odvojene jednim razmakom.");
+                Console.WriteLine("\nUnesi emailove osoba koje zelis izbrisati odvojene jednim razmakom.");
                 var inputEmails = Console.ReadLine().Split(" ").ToList();
                 var incorrectEmails = new List<string>();
                 foreach (var singleEvent in events)
@@ -341,7 +340,7 @@ void printFutureEvents()
                 if(incorrectEmails.Count() is not 0)
                 {
                     counter = 0;
-                    var output = "Nisu pronađeni sljedeći emailovi: ";
+                    var output = "Nisu pronadeni sljedeci emailovi: ";
                     foreach (var incorrectEmail in incorrectEmails)
                     {
                             if (counter != 0) output += ", ";
@@ -385,16 +384,16 @@ void createEvent()
     do
     {
         condition = true;
-        Console.WriteLine("Unesi datum početka eventa. (DD-MM-GGGG)");
+        Console.WriteLine("Unesi datum pocetka eventa. (DD-MM-GGGG)");
         newEventBeginDate = Console.ReadLine();
         if (DateTime.TryParse(newEventBeginDate, out dateResult) is false)
         {
-            Console.WriteLine("## Pogrešan unos! Unesi u pravilnom formatu.");
+            Console.WriteLine("## Pogresan unos! Unesi u pravilnom formatu.");
             condition = false;
         }
         else if (DateTime.Parse(newEventBeginDate) < DateTime.Now)
         {
-            Console.WriteLine("## Pogrešan unos! Uneseni datum mora biti u budućnosti.");
+            Console.WriteLine("## Pogresan unos! Uneseni datum mora biti u buducnosti.");
             condition = false;
         }
     } while (condition is false);
@@ -402,7 +401,7 @@ void createEvent()
     Console.WriteLine("--- Unos eventa ---");
     Console.WriteLine($"NAZIV EVENTA: {newEventTitle}");
     Console.WriteLine($"LOKACIJA EVENTA: {newEventLocation}");
-    Console.WriteLine($"DATUM POČETKA EVENTA: {newEventBeginDate}");
+    Console.WriteLine($"DATUM POCETKA EVENTA: {newEventBeginDate}");
 
     do
     {
@@ -411,12 +410,12 @@ void createEvent()
         newEventEndDate = Console.ReadLine();
         if (DateTime.TryParse(newEventEndDate, out dateResult) is false)
         {
-            Console.WriteLine("## Pogrešan unos! Unesi u pravilnom formatu.");
+            Console.WriteLine("## Pogresan unos! Unesi u pravilnom formatu.");
             condition = false;
         }
         else if (DateTime.Parse(newEventEndDate) < DateTime.Parse(newEventBeginDate))
         {
-            Console.WriteLine("## Pogrešan unos! Uneseni datum mora biti nakon datuma početka.");
+            Console.WriteLine("## Pogresan unos! Uneseni datum mora biti nakon datuma pocetka.");
             condition = false;
         }
     } while (condition is false);
@@ -424,7 +423,7 @@ void createEvent()
     Console.WriteLine("--- Unos eventa ---");
     Console.WriteLine($"NAZIV EVENTA: {newEventTitle}");
     Console.WriteLine($"LOKACIJA EVENTA: {newEventLocation}");
-    Console.WriteLine($"DATUM POČETKA EVENTA: {newEventBeginDate}");
+    Console.WriteLine($"DATUM POCETKA EVENTA: {newEventBeginDate}");
     Console.WriteLine($"DATUM KRAJA EVENTA: {newEventEndDate}");
 
     Console.WriteLine("Unesi e-mailove pozvanih osoba. (odvoji jednim razmakom)");
